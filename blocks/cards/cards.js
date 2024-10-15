@@ -1,7 +1,27 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
-export default function decorate(block) {
-  /* change to ul, li */
+async function getData() {
+  const respsonse = await fetch('https://dummyjson.com/products?limit=0&delay=5000');
+  const respsonseJson = await respsonse.json();
+  return respsonseJson;
+}
+
+export default async function decorate(block) {
+  const data = await getData();
+
+  const newUl = document.createElement('ul');
+  const products = data?.products;
+  if (products.length > 0) {
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < products.length; i++) {
+      const newLi = document.createElement('li');
+      newLi.textContent = products[i].title;
+      newUl.appendChild(newLi);
+    }
+  }
+
+  document.body.appendChild(newUl);
+
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {
     const li = document.createElement('li');
