@@ -32,8 +32,8 @@ function buildHeroBlock(main) {
 /**
  * load fonts.css and set a session storage flag
  */
-async function loadFonts() {
-  await loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
+function loadFonts() {
+  loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
   try {
     if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
   } catch (e) {
@@ -72,14 +72,14 @@ export function decorateMain(main) {
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
-async function loadEager(doc) {
+function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
-    await loadSection(main.querySelector('.section'), waitForFirstImage);
+    loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 
   sampleRUM.enhance();
@@ -98,9 +98,9 @@ async function loadEager(doc) {
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
  */
-async function loadLazy(doc) {
+function loadLazy(doc) {
   const main = doc.querySelector('main');
-  await loadSections(main);
+  loadSections(main);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
@@ -123,9 +123,12 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
+loadEager(document);
+loadLazy(document);
+
 async function loadPage() {
-  await loadEager(document);
-  await loadLazy(document);
+  // await loadEager(document);
+  // await loadLazy(document);
   loadDelayed();
 }
 

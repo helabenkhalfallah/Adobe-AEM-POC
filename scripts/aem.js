@@ -214,7 +214,7 @@ function readBlockConfig(block) {
  * Loads a CSS file.
  * @param {string} href URL to the CSS file
  */
-async function loadCSS(href) {
+function loadCSS(href) {
   return new Promise((resolve, reject) => {
     if (!document.querySelector(`head > link[href="${href}"]`)) {
       const link = document.createElement('link');
@@ -234,7 +234,7 @@ async function loadCSS(href) {
  * @param {string} src URL to the JS file
  * @param {Object} attrs additional optional attributes
  */
-async function loadScript(src, attrs) {
+function loadScript(src, attrs) {
   return new Promise((resolve, reject) => {
     if (!document.querySelector(`head > script[src="${src}"]`)) {
       const script = document.createElement('script');
@@ -488,7 +488,7 @@ function decorateSections(main) {
  * @returns {object} Window placeholders object
  */
 // eslint-disable-next-line import/prefer-default-export
-async function fetchPlaceholders(prefix = 'default') {
+function fetchPlaceholders(prefix = 'default') {
   window.placeholders = window.placeholders || {};
   if (!window.placeholders[prefix]) {
     window.placeholders[prefix] = new Promise((resolve) => {
@@ -618,7 +618,7 @@ function decorateBlocks(main) {
  * @param {Element} header header element
  * @returns {Promise}
  */
-async function loadHeader(header) {
+function loadHeader(header) {
   const headerBlock = buildBlock('header', '');
   header.append(headerBlock);
   decorateBlock(headerBlock);
@@ -630,7 +630,7 @@ async function loadHeader(header) {
  * @param footer footer element
  * @returns {Promise}
  */
-async function loadFooter(footer) {
+function loadFooter(footer) {
   const footerBlock = buildBlock('footer', '');
   footer.append(footerBlock);
   decorateBlock(footerBlock);
@@ -659,16 +659,18 @@ async function waitForFirstImage(section) {
  * @param {Element} section The section element
  */
 
-async function loadSection(section, loadCallback) {
+function loadSection(section, loadCallback) {
   const status = section.dataset.sectionStatus;
   if (!status || status === 'initialized') {
     section.dataset.sectionStatus = 'loading';
     const blocks = [...section.querySelectorAll('div.block')];
     for (let i = 0; i < blocks.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      await loadBlock(blocks[i]);
+      loadBlock(blocks[i]);
     }
-    if (loadCallback) await loadCallback(section);
+    if (loadCallback) {
+      loadCallback(section);
+    }
     section.dataset.sectionStatus = 'loaded';
     section.style.display = null;
   }
@@ -679,11 +681,11 @@ async function loadSection(section, loadCallback) {
  * @param {Element} element The parent element of sections to load
  */
 
-async function loadSections(element) {
+function loadSections(element) {
   const sections = [...element.querySelectorAll('div.section')];
   for (let i = 0; i < sections.length; i += 1) {
     // eslint-disable-next-line no-await-in-loop
-    await loadSection(sections[i]);
+    loadSection(sections[i]);
   }
 }
 
